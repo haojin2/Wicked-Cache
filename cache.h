@@ -60,8 +60,36 @@ public:
 	LRU(){
 		cout<<"LRU"<<endl;
 	}
+	LRU(size_t size, size_t way = 1, size_t block_size = 1)
+	: Cache_Base(size, way, block_size){
+		return;
+	}
 	bool access(size_t address){
-		return true;
+		size_t index = _get_index(address);
+		size_t tag = _get_tag(address);
+		if (way != 1){
+			for (size_t i = 0; i < way; ++i){
+				if (entries[index * way + i] == (long)tag){
+					return true;
+				}
+				if (entries[index * way + i] == (long)-1){
+					entries[index * way + i] = (long)tag;
+					return false;
+				}
+			}
+			size_t victum = rand() % way;
+			entries[index * way + victum] = (long)tag;
+			return false;
+		}
+		else{
+			if (entries[index] == (long)tag){
+				return true;
+			}
+			else{
+				entries[index] = (long)tag;
+				return false;
+			}
+		}
 	}
 private:
 	
