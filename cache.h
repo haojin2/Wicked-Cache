@@ -2,6 +2,7 @@
 #ifndef _CACHE_H_
 #define _CACHE_H_
 #include <vector>
+#include <queue>
 #include <iostream>
 using namespace std;
 class Cache_Base{
@@ -28,6 +29,20 @@ protected:
 	
 };
 class LRU: public Cache_Base{
-	
+	LRU(){
+		cout<<"LRU"<<endl;
+	}
+	LRU(size_t size){
+		
+	}
+	LRU(size_t )
+private:
+	queue<>	
 };
+class Random: public Cache_Base(
+public:
+
+private:
+
+);
 #endif
