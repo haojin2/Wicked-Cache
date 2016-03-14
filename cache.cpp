@@ -5,11 +5,27 @@
 using namespace std;
 
 size_t powerof2(size_t input){
-	int count = 0;
+	int count = -1;
+	if (input == 0){
+		return input;
+	}
 	while (input > 0){
 		count += 1;
 		input = input >> 1;
 	}
-	return (0x1<<count);
+	return (size_t)(0x1<<count);
+}
+
+size_t log2(size_t input){
+	int count = -1;
+	if (input == 0)
+	{
+		return input;
+	}
+	while (input > 0){
+		count += 1;
+		input = input >> 1;
+	}
+	return (size_t)(count);
 }
 
