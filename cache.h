@@ -85,7 +85,7 @@ public:
 								cout<<temp[k]<<" ";
 							}
 							cout<<endl;
-							return true;
+							break;
 						}
 					}
 					return true;
@@ -109,7 +109,6 @@ public:
 			for(size_t k = 0; k < temp.size(); k++){
 				cout<<temp[k]<<" ";
 			}
-			cout<<endl;
 			return false;
 		}
 		else{

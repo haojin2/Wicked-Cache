@@ -3,10 +3,18 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char ** argv){
 	Cache_Base * temp;
 	srand(time(NULL));
-	temp = new LRU(64, 4, 16);
+	if (argc < 2){
+		return 1;
+	}
+	switch (argv[1][0]){
+		case 'L':temp = new LRU(64, 4, 16);break;
+		case 'R': temp = new Random(64,4,16); break;
+		default: break;
+	}
+
 	cout<<temp->access(0x0000000000000000)<<endl;
 	cout<<temp->access(0x000000000000000F)<<endl;
 	// 0
