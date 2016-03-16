@@ -7,6 +7,8 @@
 #include <time.h>
 #include <math.h>
 #include <stdlib.h> 
+#include <unordered_map>
+#include <utility>
 
 using namespace std;
 
@@ -62,23 +64,52 @@ public:
 	}
 	LRU(size_t size, size_t way = 1, size_t block_size = 1)
 	: Cache_Base(size, way, block_size){
+		// for (size_t i = 0; i < size / way / block_size; ++i){
+		// 	usage_map[i] = vector<size_t>();
+		// }
 		return;
 	}
 	bool access(size_t address){
 		size_t index = _get_index(address);
 		size_t tag = _get_tag(address);
+		vector<size_t> & temp = usage_map[index];
 		if (way != 1){
 			for (size_t i = 0; i < way; ++i){
 				if (entries[index * way + i] == (long)tag){
+					for (size_t j = temp.size() - 1; j >= 0; --j){
+						if (temp[j] == i){
+							temp.erase(temp.begin()+j);
+							temp.push_back(i);
+							cout<<"hit "<<i<<" , ";
+							for(size_t k = 0; k < temp.size(); k++){
+								cout<<temp[k]<<" ";
+							}
+							cout<<endl;
+							return true;
+						}
+					}
 					return true;
 				}
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
+					temp.push_back(i);
+					cout<<"warmup miss, ";
+					for(size_t k = 0; k < temp.size(); k++){
+						cout<<temp[k]<<" ";
+					}
+					cout<<endl;
 					return false;
 				}
 			}
-			size_t victum = rand() % way;
-			entries[index * way + victum] = (long)tag;
+			size_t victim = temp[0];
+			temp.erase(temp.begin());
+			temp.push_back(victim);
+			entries[index * way + victim] = (long)tag;
+			cout<<"simply miss "<<endl;
+			for(size_t k = 0; k < temp.size(); k++){
+				cout<<temp[k]<<" ";
+			}
+			cout<<endl;
 			return false;
 		}
 		else{
@@ -92,7 +123,7 @@ public:
 		}
 	}
 private:
-	
+	unordered_map<size_t, vector<size_t>> usage_map;
 };
 
 class Random: public Cache_Base{
@@ -118,8 +149,8 @@ public:
 					return false;
 				}
 			}
-			size_t victum = rand() % way;
-			entries[index * way + victum] = (long)tag;
+			size_t victim = rand() % way;
+			entries[index * way + victim] = (long)tag;
 			return false;
 		}
 		else{
