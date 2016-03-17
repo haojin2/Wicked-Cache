@@ -21,3 +21,5 @@ public:
 	virtual char next_state(int operation, char curr_state){}
 private:
 };
+
+
