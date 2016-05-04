@@ -1,6 +1,6 @@
-// MOESI_H_
-#ifndef _MOESI_H_
-#define _MOESI_H_
+// MOSI_H_
+#ifndef _MOSI_H_
+#define _MOSI_H_
 #include "protocol.h"
 #define BUS_READ 0
 #define BUS_WRITE 1
@@ -8,13 +8,13 @@
 #define PROC_WRITE 3
 using namespace std;
 
-class moesi: public protocol{
+class mosi: public protocol{
 public:
-	moesi(){
-		cout<<"MOESI constructor"<<endl;
+	mosi(){
+		cout<<"MOSI constructor"<<endl;
 	}
-    ~moesi(){
-        cout<<"MOESI destructor"<<endl;
+    ~mosi(){
+        cout<<"MOSI destructor"<<endl;
     }
 	char next_state(int operation, char curr_state){
 		char output;
@@ -39,16 +39,6 @@ public:
         	    }
                 break;
             }
-        	case 'e' :{
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 'e';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break;
-        	    }
-                break;
-            }
         	case 's' :{
         	    switch(operation){
                     case 0: output = 's';break;
@@ -63,7 +53,7 @@ public:
         	    switch(operation){
                     case 0: output = 'i';break;
                     case 1: output = 'i';break;
-                    case 2: output = 'e';break;
+                    case 2: output = 's';break;
                     case 3: output = 'm';break;
 					default: cout<<"invalid operation"<<endl; break;
         	    }
