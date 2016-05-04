@@ -75,3 +75,5 @@ public:
 	}
 private:
 };
+
+#endif // _MOESI_H_

@@ -1,4 +1,7 @@
 // _MSI_H_
+#ifndef _MSI_H_
+#define _MSI_H_
+
 #include "protocol.h"
 #define BUS_READ 0
 #define BUS_WRITE 1
@@ -54,3 +57,5 @@ public:
 
 	/* data */
 };
+
+#endif // _MSI_H

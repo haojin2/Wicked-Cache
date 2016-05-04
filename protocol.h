@@ -22,4 +22,4 @@ public:
 private:
 };
 
-
+#endif // _PROTOCOL_H_

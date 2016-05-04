@@ -65,3 +65,5 @@ public:
 	}
 private:
 };
+
+#endif // _MESI_H_
