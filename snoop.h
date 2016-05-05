@@ -15,7 +15,11 @@
 #include "protocol.h"
 #include "memops.h"
 
-#define RESPONSE 0
+#define READ 1
+#define WRITE 2
+#define RESPONSE 3
+#define WRITEBACK 4
+
 #define MEM -1
 
 using namespace std;

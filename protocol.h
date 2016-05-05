@@ -24,12 +24,14 @@ public:
 	/* Returns (next_state, write_back?, respond?) */
 	virtual tuple<char, bool, bool> next_state(int operation, char curr_state) = 0;
 	virtual bool hit(int operation, char curr_state) = 0;
+	virtual bool dirty(char state) = 0;
 
 	int to_proc(int op, bool from_cache = true);
 	int to_bus(int op);
 
 private:
-
+	/* true if write-back, false if write-through */
+	bool write_back_based_protocol;
 };
 
 #endif // _PROTOCOL_H_

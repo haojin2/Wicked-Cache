@@ -8,6 +8,7 @@ class msi: public Protocol{
 public:
 	msi(){
 		cout<<"MSI constructor\n";
+		write_back_based_protocol = true;
 	}
 	~msi(){
 		cout<<"MSI destructor\n";
@@ -72,6 +73,10 @@ public:
 			default: cout<<"invalid curr state"<<endl; break;
 		}
 		return hit;
+	}
+
+	bool dirty(char state){
+		return state == 'm';
 	}
 
 };
