@@ -18,7 +18,7 @@ size_t log2(size_t input);
 class Cache_Base{
 public:
 	Cache_Base(){
-		cout<<"Base constructor"<<endl;
+		cerr<<"Base constructor"<<endl;
 	}
 
 	Cache_Base(size_t size, size_t way = 1, size_t block_size = 1){
@@ -40,7 +40,7 @@ public:
 		states = vector<char>(this->size, 'i');
 		tag_mask = 0xffffffffffffffff << (log2(this->block_size) + log2(this->size / this->way));
 		index_mask = ((size_t)0xffffffffffffffff) ^ tag_mask;
-		cout<<size<<" kb with "<<way<<"-way associative"<<" with block size of "<<this->block_size<<endl;
+		cerr<<size<<" kb with "<<way<<"-way associative"<<" with block size of "<<this->block_size<<endl;
 	}
 
 	virtual pair<bool,char> access(size_t address) = 0;
@@ -134,7 +134,7 @@ protected:
 class LRU: public Cache_Base{
 public:
 	LRU(){
-		cout<<"LRU"<<endl;
+		cerr<<"LRU"<<endl;
 	}
 
 	LRU(size_t size, size_t way = 1, size_t block_size = 1)
@@ -151,11 +151,11 @@ public:
 						if (temp[j] == i){
 							temp.erase(temp.begin()+j);
 							temp.push_back(i);
-							cout<<"hit "<<i<<" , ";
+							cerr<<"hit "<<i<<" , ";
 							for(size_t k = 0; k < temp.size(); k++){
-								cout<<temp[k]<<" ";
+								cerr<<temp[k]<<" ";
 							}
-							cout<<endl;
+							cerr<<endl;
 							break;
 						}
 					}
@@ -164,11 +164,11 @@ public:
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
 					temp.push_back(i);
-					cout<<"warmup miss, ";
+					cerr<<"warmup miss, ";
 					for(size_t k = 0; k < temp.size(); k++){
-						cout<<temp[k]<<" ";
+						cerr<<temp[k]<<" ";
 					}
-					cout<<endl;
+					cerr<<endl;
 					return pair<bool,char>(false, states[index * way + i]);
 				}
 			}
@@ -176,9 +176,9 @@ public:
 			temp.erase(temp.begin());
 			temp.push_back(victim);
 			entries[index * way + victim] = (long)tag;
-			cout<<"simply miss "<<endl;
+			cerr<<"simply miss "<<endl;
 			for(size_t k = 0; k < temp.size(); k++){
-				cout<<temp[k]<<" ";
+				cerr<<temp[k]<<" ";
 			}
 			return pair<bool,char>(false, states[index * way + victim]);
 		}
@@ -200,7 +200,7 @@ private:
 class Random: public Cache_Base{
 public:
 	Random(){
-		cout<<"Random"<<endl;
+		cerr<<"Random"<<endl;
 	}
 
 	Random(size_t size, size_t way = 1, size_t block_size = 1)

@@ -1,30 +1,26 @@
 #include "memops.h"
 
 MemOps::MemOps(string filename){
-	cout<<"MemOps constructor"<<endl;
+	cerr<<"MemOps constructor"<<filename<<endl;
     file = fopen(filename.c_str(), "r");
     if (file == NULL)
-        cout << "MemOps: Cannot open file " << filename << endl;
+        cerr << "MemOps: Cannot open file " << endl;
     else
         getNextOp();
 }
 
 MemOps::~MemOps(){
-    cout<<"MemOps destructor"<<endl;
-    if (file)
-        fclose(file);
+    cerr<<"MemOps destructor"<<endl;
+    fclose(file);
+    free(line);
 }
 
 void MemOps::getNextOp(){
-    assert(file != NULL);
-
-    char* line;
     size_t len;
     if (-1 != getline(&line, &len, file)) {
         if (3 > sscanf(line, "%d %d %x", &wait_cycles, &op, &address))
-            cout << "MemOps: Scanning line failed." << endl;
-        free(line);
+            cerr << "MemOps: Scanning line failed." << endl;
     } else {
-        wait_cycles = -1;
+        op = address = wait_cycles = -1;
     }
 }
