@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class mosi: public protocol{
+class mosi: public Protocol{
 public:
 	mosi(){
 		cout<<"MOSI constructor"<<endl;

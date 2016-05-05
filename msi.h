@@ -9,7 +9,7 @@
 #define PROC_WRITE 3
 #define BUS_READ_MEM 4
 
-class msi: public protocol{
+class msi: public Protocol{
 public:
 	msi(){
 		cout<<"MSI constructor\n";

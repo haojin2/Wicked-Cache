@@ -9,7 +9,7 @@
 #define BUS_READ_MEM 4
 using namespace std;
 
-class mesi: public protocol{
+class mesi: public Protocol{
 public:
 	mesi(){
 		cout<<"MESI constructor"<<endl;

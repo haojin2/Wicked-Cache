@@ -12,13 +12,13 @@
 
 using namespace std;
 
-class protocol
+class Protocol
 {
 public:
-	protocol(){
+	Protocol(){
 		cout<<"protocol"<<endl;
 	}
-	virtual char next_state(int operation, char curr_state, vector<char> & curr_states){}
+	virtual char next_state(int operation, char curr_state){}
 private:
 };
 

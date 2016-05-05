@@ -9,7 +9,7 @@
 #define BUS_READ_MEM 4
 using namespace std;
 
-class mesif: public protocol{
+class mesif: public Protocol{
 public:
 	mesif(){
 		cout<<"MESIF constructor"<<endl;

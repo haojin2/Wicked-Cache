@@ -10,7 +10,7 @@ using namespace std;
 int main(int argc, char ** argv){
 	cout<<"test"<<endl;
     vector<char> states = {'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i'};
-    protocol * mesif_protocol;
+    Protocol * mesif_protocol;
     mesif_protocol = new mesif();
     vector<char> temp_states = {'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i'};
     int operation;
