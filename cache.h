@@ -9,7 +9,6 @@
 #include <stdlib.h> 
 #include <unordered_map>
 #include <utility>
-
 using namespace std;
 
 size_t powerof2(size_t input);
@@ -34,14 +33,58 @@ public:
 			this->block_size = this->size / this->way;
 		}
 		else{
-			this->block_size = block_size;
+			this->block_size = block_size;  // jin 
 		}
 		entries = vector<long>(this->size, -1);
+		status = vector<char>(this->size, 'i');
 		tag_mask = 0xffffffffffffffff << (log2(this->block_size) + log2(this->size / this->way));
 		index_mask = ((size_t)0xffffffffffffffff) ^ tag_mask;
 		cout<<size<<" kb with "<<way<<"-way associative"<<" with block size of "<<this->block_size<<endl;
 	}
 	virtual bool access(size_t address){}
+	bool peek(size_t address){
+		size_t index = _get_index(address);
+		size_t tag = _get_tag(address);
+		if (way != 1){
+			for (size_t i = 0; i < way; ++i){
+				if (entries[index * way + i] == (long)tag){
+					return true;
+				}
+			}
+			return false;
+		}
+		else{
+			if (entries[index] == (long)tag){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		return false;
+	}
+	char get_status(size_t address){
+		if (!peek(address)){
+			return 'i';
+		}
+		else{
+			size_t index = _get_index(address);
+			size_t tag = _get_tag(address);
+			if (way != 1){
+				for (size_t i = 0; i < way; ++i){
+					if (entries[index * way + i] == (long)tag){
+						return status[index * way + i];
+					}
+				}
+			}
+			else{
+				if (entries[index] == (long)tag){
+					return status[index];
+				}
+			}
+		}
+		return 'i';
+	}
 protected:
 	inline size_t _get_tag(size_t address){
 		return (tag_mask & address) >> (log2(this->block_size) + log2(this->size / this->way));
@@ -55,6 +98,7 @@ protected:
 	size_t size;
 	size_t way;
 	vector<long> entries;
+	vector<char> status;
 };
 
 class LRU: public Cache_Base{
@@ -135,7 +179,6 @@ public:
 		return;
 	}
 	bool access(size_t address){
-
 		size_t index = _get_index(address);
 		size_t tag = _get_tag(address);
 		if (way != 1){
@@ -161,7 +204,7 @@ public:
 				return false;
 			}
 		}
-	}
+	}	
 private:
 	
 };
