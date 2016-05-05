@@ -20,6 +20,7 @@ public:
 	Cache_Base(){
 		cout<<"Base constructor"<<endl;
 	}
+
 	Cache_Base(size_t size, size_t way = 1, size_t block_size = 1){
 		this->size = powerof2(size) * 1024;
 		if (way > this->size){
@@ -41,7 +42,9 @@ public:
 		index_mask = ((size_t)0xffffffffffffffff) ^ tag_mask;
 		cout<<size<<" kb with "<<way<<"-way associative"<<" with block size of "<<this->block_size<<endl;
 	}
-	virtual bool access(size_t address){}
+
+	virtual pair<bool,char> access(size_t address) = 0;
+
 	bool peek(size_t address){
 		size_t index = _get_index(address);
 		size_t tag = _get_tag(address);
@@ -63,6 +66,7 @@ public:
 		}
 		return false;
 	}
+
 	char get_status(size_t address){
 		if (!peek(address)){
 			return 'i';
@@ -85,6 +89,7 @@ public:
 		}
 		return 'i';
 	}
+
 	bool set_status(size_t address, char new_status){
 		if (!peek(address)){
 			return false;
@@ -109,6 +114,7 @@ public:
 		}
 		return false;
 	}
+
 protected:
 	inline size_t _get_tag(size_t address){
 		return (tag_mask & address) >> (log2(this->block_size) + log2(this->size / this->way));
@@ -130,14 +136,11 @@ public:
 	LRU(){
 		cout<<"LRU"<<endl;
 	}
+
 	LRU(size_t size, size_t way = 1, size_t block_size = 1)
-	: Cache_Base(size, way, block_size){
-		// for (size_t i = 0; i < size / way / block_size; ++i){
-		// 	usage_map[i] = vector<size_t>();
-		// }
-		return;
-	}
-	bool access(size_t address){
+		: Cache_Base(size, way, block_size) {}
+
+	pair<bool,char> access(size_t address){
 		size_t index = _get_index(address);
 		size_t tag = _get_tag(address);
 		vector<size_t> & temp = usage_map[index];
@@ -156,7 +159,7 @@ public:
 							break;
 						}
 					}
-					return true;
+					return pair<bool,char>(true, status[index * way + i]);
 				}
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
@@ -166,7 +169,7 @@ public:
 						cout<<temp[k]<<" ";
 					}
 					cout<<endl;
-					return false;
+					return pair<bool,char>(false, status[index * way + i]);
 				}
 			}
 			size_t victim = temp[0];
@@ -177,18 +180,19 @@ public:
 			for(size_t k = 0; k < temp.size(); k++){
 				cout<<temp[k]<<" ";
 			}
-			return false;
+			return pair<bool,char>(false, status[index * way + victim]);
 		}
 		else{
 			if (entries[index] == (long)tag){
-				return true;
+				return pair<bool,char>(true, status[index]);
 			}
 			else{
 				entries[index] = (long)tag;
-				return false;
+				return pair<bool,char>(false, status[index]);
 			}
 		}
 	}
+
 private:
 	unordered_map<size_t, vector<size_t>> usage_map;
 };
@@ -198,37 +202,40 @@ public:
 	Random(){
 		cout<<"Random"<<endl;
 	}
+
 	Random(size_t size, size_t way = 1, size_t block_size = 1)
 	: Cache_Base(size, way, block_size){
 		return;
 	}
-	bool access(size_t address){
+
+	pair<bool,char> access(size_t address){
 		size_t index = _get_index(address);
 		size_t tag = _get_tag(address);
 		if (way != 1){
 			for (size_t i = 0; i < way; ++i){
 				if (entries[index * way + i] == (long)tag){
-					return true;
+					return pair<bool,char>(true, status[index * way + i]);
 				}
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
-					return false;
+					return pair<bool,char>(false, status[index * way + i]);
 				}
 			}
 			size_t victim = rand() % way;
 			entries[index * way + victim] = (long)tag;
-			return false;
+			return pair<bool,char>(false, status[index * way + victim]);
 		}
 		else{
 			if (entries[index] == (long)tag){
-				return true;
+				return pair<bool,char>(true, status[index]);
 			}
 			else{
 				entries[index] = (long)tag;
-				return false;
+				return pair<bool,char>(false, status[index]);
 			}
 		}
-	}	
+	}
+	
 private:
 	
 };

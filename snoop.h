@@ -1,6 +1,6 @@
-// SNOOP_H_
-#ifndef SNOOP_H_
-#define SNOOP_H_
+// _SNOOP_H_
+#ifndef _SNOOP_H_
+#define _SNOOP_H_
 
 #include <string>
 #include <iostream>
@@ -15,7 +15,7 @@
 #include "protocol.h"
 #include "memops.h"
 
-#define RESPONSE -1
+#define RESPONSE 0
 #define MEM -1
 
 using namespace std;
@@ -45,16 +45,18 @@ private:
     class BusObj
     {
     public:
-        BusObj(int op, int wait_cycles, int subject, long address) {
+        BusObj(int op, int wait_cycles, int src, int dest, long address) {
             this->op = op;
             this->wait_cycles = wait_cycles;
-            this->subject = subject;
+            this->src = src;
+            this->dest = dest;
             this->address = address;
         };
     
         int op;
         int wait_cycles;
-        int subject;
+        int src;
+        int dest;
         long address;
     };
 
