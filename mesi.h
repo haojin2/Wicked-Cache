@@ -65,7 +65,7 @@ public:
             }
             default: cout<<"invalid curr state"<<endl; break;
         }
-        return make_tuple(output, write_back, respond);
+        return tuple<char, bool, bool>(output, write_back, respond);
 	}
 
 	bool hit(int operation, char curr_state){

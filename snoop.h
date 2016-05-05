@@ -33,7 +33,7 @@ public:
         ptc = new PROTOCOL_TYPE();
         for (int i = 0; i < NUM_PROCESSORS; ++i)
         {
-            processor_ops.push_back(MemOps("access_pattern_"+i.tostring()+".txt"));
+            processor_ops.push_back(MemOps("access_pattern_"+to_string(i)+".txt"));
             caches.push_back(new CACHE_TYPE(CACHE_SIZE, CACHE_NUM_WAYS, CACHE_BLOCK_SIZE));
             pending.push_back(false);
         }

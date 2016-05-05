@@ -6,7 +6,7 @@ Protocol::Protocol() {
 
 int Protocol::to_proc(int op, bool from_cache = true) {
 	if (op == READ) {
-		return cache ? PROC_READ_FROM_CACHE : PROC_READ_FROM_MEM;
+		return from_cache ? PROC_READ_FROM_CACHE : PROC_READ_FROM_MEM;
 	} else if (op == WRITE) {
 		return PROC_WRITE;
 	} else {

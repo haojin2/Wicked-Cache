@@ -1,6 +1,6 @@
 #include "snoop.h"
 
-Snoop::Run() {
+void Snoop::Run() {
 	unsigned long cycle = 0;
 	int finished_processors = 0;
 	while (finished_processors < NUM_PROCESSORS) {

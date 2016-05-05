@@ -19,7 +19,7 @@ public:
     ~MemOps();
 	void getNextOp();
 
-private:
+// private:
     FILE * file;
     int wait_cycles;
     int op;

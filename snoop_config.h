@@ -1,9 +1,7 @@
 // cache coherence protocol
 #include "msi.h"
-typedef msi PROTOCOL_TYPE
+#include "cache.h"
 
-// cache specifications
-typedef LRU CACHE_TYPE
 #define CACHE_SIZE 64
 #define CACHE_NUM_WAYS 2
 #define CACHE_BLOCK_SIZE 16
@@ -16,3 +14,8 @@ typedef LRU CACHE_TYPE
 #define BUS_RESPONSE_DELAY 5
 #define BUS_WRITEBACK_DELAY 10
 #define MEM_DELAY 20
+
+typedef msi PROTOCOL_TYPE;
+
+// cache specifications
+typedef LRU CACHE_TYPE;

@@ -1,4 +1,5 @@
 #include "cache.h"
+#include "snoop.h"
 #include <iostream>
 
 using namespace std;
@@ -15,6 +16,8 @@ int main(int argc, char ** argv){
 		// case 'M': temp = new MRU(64, 4, 16); break;
 		default: break;
 	}
+	Snoop * new_snoop = new Snoop();
+	new_snoop->Run();
 
 	// cout<<temp->access(0x0000000000000000)<<endl;
 	// cout<<temp->access(0x000000000000000F)<<endl;

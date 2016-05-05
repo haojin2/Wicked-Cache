@@ -3,7 +3,6 @@
 #define _MOSI_H_
 #include "protocol.h"
 
-
 using namespace std;
 
 class mosi: public Protocol{
@@ -62,7 +61,7 @@ public:
 			}
             default: cout<<"invalid curr state"<<endl; break;
         }
-        return output;
+        return tuple<char, bool, bool>(output, write_back, respond);
 	}
 
 	bool hit(int operation, char curr_state){

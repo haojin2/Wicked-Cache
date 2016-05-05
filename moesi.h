@@ -2,11 +2,6 @@
 #ifndef _MOESI_H_
 #define _MOESI_H_
 #include "protocol.h"
-#define BUS_READ_CACHE 0
-#define BUS_WRITE 1
-#define PROC_READ 2
-#define PROC_WRITE 3
-#define BUS_READ_MEM 4
 using namespace std;
 
 class moesi: public Protocol{
@@ -76,7 +71,7 @@ public:
             }
             default: cout<<"invalid curr state"<<endl; break;
         }
-        return output;
+        return tuple<char, bool, bool>(output, write_back, respond);
 	}
 
 	bool hit(int operation, char curr_state){
