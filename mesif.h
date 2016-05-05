@@ -1,6 +1,6 @@
-// MESI_H_
-#ifndef _MESI_H_
-#define _MESI_H_
+// MESIF_H_
+#ifndef _MESIF_H_
+#define _MESIF_H_
 #include "protocol.h"
 #define BUS_READ_CACHE 0
 #define BUS_WRITE 1
@@ -9,13 +9,13 @@
 #define BUS_READ_MEM 4
 using namespace std;
 
-class mesi: public protocol{
+class mesif: public protocol{
 public:
-	mesi(){
-		cout<<"MESI constructor"<<endl;
+	mesif(){
+		cout<<"MESIF constructor"<<endl;
 	}
-    ~mesi(){
-        cout<<"MESI destructor"<<endl;
+    ~mesif(){
+        cout<<"MESIF destructor"<<endl;
     }
 	char next_state(int operation, char curr_state, vector<char> & curr_states){
 		char output;
@@ -28,7 +28,7 @@ public:
                     case 3: output = 'm';break;
 					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
            	    }
-                break;
+                break;  
             }
         	case 'e' :{
         	    switch(operation){
@@ -52,12 +52,22 @@ public:
             }
         	case 'i' :{
         	    switch(operation){
-                    case 0: output = 's';break;
+                    case 0: output = 'f';break;
                     case 1: output = 'm';break;
                     //case 2: output = 'i';break;  //impossible state
                     //case 3: output = 'm';break;  //impossible state
                     case 4: output = 'e';break;
 					default: cout<<"invalid operation"<<endl; break;
+        	    }
+                break;
+            }
+        	case 'f' :{
+        	    switch(operation){
+                    case 0: output = 's';break;
+                    case 1: output = 'i';break;
+                    case 2: output = 'f';break;
+                    case 3: output = 'm';break;
+					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
         	    }
                 break;
             }
@@ -67,5 +77,4 @@ public:
 	}
 private:
 };
-
-#endif // _MESI_H_
+#endif // _MESIF_H_

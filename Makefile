@@ -12,7 +12,7 @@ wicked : main.o cache.o
 test: test.o
 	$(LD) test.o -o test
 
-test.o: test.cpp mesi.h msi.h mosi.h moesi.h
+test.o: test.cpp mesi.h msi.h mosi.h moesi.h mesif.h
 	$(CXX) $(CXXFLAGS) test.cpp
 
 main.o : main.cpp cache.h

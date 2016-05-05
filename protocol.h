@@ -18,7 +18,7 @@ public:
 	protocol(){
 		cout<<"protocol"<<endl;
 	}
-	virtual char next_state(int operation, char curr_state){}
+	virtual char next_state(int operation, char curr_state, vector<char> & curr_states){}
 private:
 };
 
