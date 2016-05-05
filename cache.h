@@ -85,6 +85,30 @@ public:
 		}
 		return 'i';
 	}
+	bool set_status(size_t address, char new_status){
+		if (!peek(address)){
+			return false;
+		}
+		else{
+			size_t index = _get_index(address);
+			size_t tag = _get_tag(address);
+			if (way != 1){
+				for (size_t i = 0; i < way; ++i){
+					if (entries[index * way + i] == (long)tag){
+						status[index * way + i] = new_status;
+						return true;
+					}
+				}
+			}
+			else{
+				if (entries[index] == (long)tag){
+					status[index] = new_status;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 protected:
 	inline size_t _get_tag(size_t address){
 		return (tag_mask & address) >> (log2(this->block_size) + log2(this->size / this->way));
