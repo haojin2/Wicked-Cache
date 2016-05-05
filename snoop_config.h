@@ -11,6 +11,8 @@ typedef LRU CACHE_TYPE
 // system specifications
 #define NUM_PROCESSORS 4
 
-// bus specifications
-#define BUS_DELAY 5
+// bus & memory delays
+#define BUS_REQUEST_DELAY 5
+#define BUS_RESPONSE_DELAY 5
+#define BUS_WRITEBACK_DELAY 10
 #define MEM_DELAY 20

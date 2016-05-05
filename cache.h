@@ -37,7 +37,7 @@ public:
 			this->block_size = block_size;  // jin 
 		}
 		entries = vector<long>(this->size, -1);
-		status = vector<char>(this->size, 'i');
+		states = vector<char>(this->size, 'i');
 		tag_mask = 0xffffffffffffffff << (log2(this->block_size) + log2(this->size / this->way));
 		index_mask = ((size_t)0xffffffffffffffff) ^ tag_mask;
 		cout<<size<<" kb with "<<way<<"-way associative"<<" with block size of "<<this->block_size<<endl;
@@ -67,7 +67,7 @@ public:
 		return false;
 	}
 
-	char get_status(size_t address){
+	char get_state(size_t address){
 		if (!peek(address)){
 			return 'i';
 		}
@@ -77,20 +77,20 @@ public:
 			if (way != 1){
 				for (size_t i = 0; i < way; ++i){
 					if (entries[index * way + i] == (long)tag){
-						return status[index * way + i];
+						return states[index * way + i];
 					}
 				}
 			}
 			else{
 				if (entries[index] == (long)tag){
-					return status[index];
+					return states[index];
 				}
 			}
 		}
 		return 'i';
 	}
 
-	bool set_status(size_t address, char new_status){
+	bool set_state(size_t address, char new_state){
 		if (!peek(address)){
 			return false;
 		}
@@ -100,14 +100,14 @@ public:
 			if (way != 1){
 				for (size_t i = 0; i < way; ++i){
 					if (entries[index * way + i] == (long)tag){
-						status[index * way + i] = new_status;
+						states[index * way + i] = new_state;
 						return true;
 					}
 				}
 			}
 			else{
 				if (entries[index] == (long)tag){
-					status[index] = new_status;
+					states[index] = new_state;
 					return true;
 				}
 			}
@@ -128,7 +128,7 @@ protected:
 	size_t size;
 	size_t way;
 	vector<long> entries;
-	vector<char> status;
+	vector<char> states;
 };
 
 class LRU: public Cache_Base{
@@ -159,7 +159,7 @@ public:
 							break;
 						}
 					}
-					return pair<bool,char>(true, status[index * way + i]);
+					return pair<bool,char>(true, states[index * way + i]);
 				}
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
@@ -169,7 +169,7 @@ public:
 						cout<<temp[k]<<" ";
 					}
 					cout<<endl;
-					return pair<bool,char>(false, status[index * way + i]);
+					return pair<bool,char>(false, states[index * way + i]);
 				}
 			}
 			size_t victim = temp[0];
@@ -180,15 +180,15 @@ public:
 			for(size_t k = 0; k < temp.size(); k++){
 				cout<<temp[k]<<" ";
 			}
-			return pair<bool,char>(false, status[index * way + victim]);
+			return pair<bool,char>(false, states[index * way + victim]);
 		}
 		else{
 			if (entries[index] == (long)tag){
-				return pair<bool,char>(true, status[index]);
+				return pair<bool,char>(true, states[index]);
 			}
 			else{
 				entries[index] = (long)tag;
-				return pair<bool,char>(false, status[index]);
+				return pair<bool,char>(false, states[index]);
 			}
 		}
 	}
@@ -214,24 +214,24 @@ public:
 		if (way != 1){
 			for (size_t i = 0; i < way; ++i){
 				if (entries[index * way + i] == (long)tag){
-					return pair<bool,char>(true, status[index * way + i]);
+					return pair<bool,char>(true, states[index * way + i]);
 				}
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
-					return pair<bool,char>(false, status[index * way + i]);
+					return pair<bool,char>(false, states[index * way + i]);
 				}
 			}
 			size_t victim = rand() % way;
 			entries[index * way + victim] = (long)tag;
-			return pair<bool,char>(false, status[index * way + victim]);
+			return pair<bool,char>(false, states[index * way + victim]);
 		}
 		else{
 			if (entries[index] == (long)tag){
-				return pair<bool,char>(true, status[index]);
+				return pair<bool,char>(true, states[index]);
 			}
 			else{
 				entries[index] = (long)tag;
-				return pair<bool,char>(false, status[index]);
+				return pair<bool,char>(false, states[index]);
 			}
 		}
 	}

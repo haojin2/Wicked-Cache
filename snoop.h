@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <queue>
 #include <vector>
+#include <tuple>
+#include <utility>
 
 #include "snoop_config.h"
 #include "cache.h"
@@ -31,8 +33,9 @@ public:
         ptc = new PROTOCOL_TYPE();
         for (int i = 0; i < NUM_PROCESSORS; ++i)
         {
-            caches.push_back(new CACHE_TYPE(CACHE_SIZE, CACHE_NUM_WAYS, CACHE_BLOCK_SIZE));
             processor_ops.push_back(MemOps("access_pattern_"+i.tostring()+".txt"));
+            caches.push_back(new CACHE_TYPE(CACHE_SIZE, CACHE_NUM_WAYS, CACHE_BLOCK_SIZE));
+            pending.push_back(false);
         }
 	}
 
@@ -65,10 +68,14 @@ private:
     };
 
     queue<BusObj> bus;
-    queue<int> reqBuffer;
+    queue<int> req_buffer;
     vector<MemOps> processor_ops;
     vector<Cache_Base*> caches;
+    vector<bool> pending;
     Protocol* ptc;
+
+    void resume(int id, BusObj & response);
+    void access_writeback_updatestate(int id, long address, int src);
 };
 
 #endif // _SNOOP_H_
