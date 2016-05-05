@@ -2,11 +2,7 @@
 #ifndef _MESIF_H_
 #define _MESIF_H_
 #include "protocol.h"
-#define BUS_READ_CACHE 0
-#define BUS_WRITE 1
-#define PROC_READ 2
-#define PROC_WRITE 3
-#define BUS_READ_MEM 4
+
 using namespace std;
 
 class mesif: public Protocol{
@@ -17,64 +13,103 @@ public:
     ~mesif(){
         cout<<"MESIF destructor"<<endl;
     }
-	char next_state(int operation, char curr_state){
+	tuple<char, bool, bool> next_state(int operation, char curr_state){
 		char output;
+		bool write_back = false;
+		bool respond = false;
         switch(curr_state){
         	case 'm' :{ 
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 'm';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-           	    }
-                break;  
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 'm'; break;
+					// case PROC_READ_FROM_MEM:   output = 'm'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 's'; write_back = true; respond = true; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
+					default: cout<<"invalid operation"<<endl; break;
+				}
+				break;
             }
         	case 'e' :{
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 'e';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-        	    }
-                break;
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 'e'; break;
+					// case PROC_READ_FROM_MEM:   output = 's'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 's'; write_back = false; respond = true; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
+					default: cout<<"invalid operation"<<endl; break;
+				}
+				break;
             }
         	case 's' :{
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 's';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-        	    }
-                break;
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 's'; break;
+					// case PROC_READ_FROM_MEM:   output = 's'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 's'; write_back = false; respond = false; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
+					default: cout<<"invalid operation"<<endl; break;
+				}
+				break;
             }
         	case 'i' :{
-        	    switch(operation){
-                    case 0: output = 'f';break;
-                    case 1: output = 'm';break;
-                    //case 2: output = 'i';break;  //impossible state
-                    //case 3: output = 'm';break;  //impossible state
-                    case 4: output = 'e';break;
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 'f'; break;
+					case PROC_READ_FROM_MEM:   output = 'e'; break;
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 'i'; write_back = false; respond = false; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
 					default: cout<<"invalid operation"<<endl; break;
-        	    }
-                break;
+				}
+				break;
             }
         	case 'f' :{
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 'f';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-        	    }
-                break;
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 'f'; break;
+					// case PROC_READ_FROM_MEM:   output = 's'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 's'; write_back = false; respond = true; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
+					default: cout<<"invalid operation"<<endl; break;
+				}
+				break;
             }
             default: cout<<"invalid curr state"<<endl; break;
         }
-        return output;
+        return make_tuple(output, write_back, respond);
 	}
+
+	bool hit(int operation, char curr_state){
+		bool hit;
+		switch (curr_state){
+			case 'm':{
+				hit = true;
+				break;
+			}
+			case 'e':{
+				hit = true;
+				break;
+			}
+			case 's':{
+				hit = (operation == READ);
+				break;
+			}
+			case 'i':{
+				hit = false;
+				break;
+			}
+			case 'f':{
+				hit = (operation == READ);
+				break;
+			}
+			default: cout<<"invalid curr state"<<endl; break;
+		}
+		return hit;
+	}
+
+	bool dirty(char state){
+		return state == 'm';
+	}
+
 private:
 };
 #endif // _MESIF_H_

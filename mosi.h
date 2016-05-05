@@ -2,11 +2,7 @@
 #ifndef _MOSI_H_
 #define _MOSI_H_
 #include "protocol.h"
-#define BUS_READ_CACHE 0
-#define BUS_WRITE 1
-#define PROC_READ 2
-#define PROC_WRITE 3
-#define BUS_READ_MEM 4
+
 
 using namespace std;
 
@@ -18,53 +14,83 @@ public:
     ~mosi(){
         cout<<"MOSI destructor"<<endl;
     }
-	char next_state(int operation, char curr_state){
+	tuple<char, bool, bool> next_state(int operation, char curr_state){
 		char output;
+		bool write_back = false;
+		bool respond = false;
         switch(curr_state){
-        	case 'm' :{ 
-        	    switch(operation){
-                    case 0: output = 'o';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 'm';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-           	    }
-                break;
-            }
-        	case 'o' :{
-        	    switch(operation){
-                    case 0: output = 'o';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 'o';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-        	    }
-                break;
-            }
-        	case 's' :{
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'i';break;
-                    case 2: output = 's';break;
-                    case 3: output = 'm';break;
-					default: cout<<"invalid operation"<<endl; break; // case 4 is impossible
-        	    }
-                break;
-            }
-        	case 'i' :{
-        	    switch(operation){
-                    case 0: output = 's';break;
-                    case 1: output = 'm';break;
-                    //case 2: output = 's';break;  //impossible state
-                    //case 3: output = 'm';break;  //impossible state
-                    case 4: output = 's';break;
+			case 'm':{
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 'm'; break;
+					// case PROC_READ_FROM_MEM:   output = 'm'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 'o'; write_back = false; respond = true; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
+				}
+				break;
+			}
+			case 'o':{
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 'o'; break;
+					// case PROC_READ_FROM_MEM:   output = 's'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; write_back = true; break;
+					case BUS_READ:             output = 'o'; write_back = false; respond = true; break;
+                    case BUS_WRITE:            output = 'i'; write_back = true; respond = false; break;
+				}
+				break;
+			}
+			case 's':{
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 's'; break;
+					// case PROC_READ_FROM_MEM:   output = 's'; break; /* impossible state */
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 's'; write_back = false; respond = true; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
+				}
+				break;
+			}
+			case 'i':{
+				switch (operation){
+					case PROC_READ_FROM_CACHE: output = 's'; break;
+					case PROC_READ_FROM_MEM:   output = 's'; break;
+					case PROC_WRITE:           output = 'm'; break;
+					case BUS_READ:             output = 'i'; write_back = false; respond = false; break;
+                    case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
 					default: cout<<"invalid operation"<<endl; break;
-        	    }
-                break;
-            }
+				}
+				break;
+			}
             default: cout<<"invalid curr state"<<endl; break;
         }
         return output;
+	}
+
+	bool hit(int operation, char curr_state){
+		bool hit;
+		switch (curr_state){
+			case 'm':{
+				hit = true;
+				break;
+			}
+			case 'o':{
+				hit = (operation == READ);
+				break;
+			}
+			case 's':{
+				hit = (operation == READ);
+				break;
+			}
+			case 'i':{
+				hit = false;
+				break;
+			}
+			default: cout<<"invalid curr state"<<endl; break;
+		}
+		return hit;
+	}
+
+	bool dirty(char state){
+		return state == 'm';
 	}
 private:
 };
