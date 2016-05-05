@@ -10,7 +10,7 @@
 
 #define READ 1
 #define WRITE 2
-#define READEX 3
+// #define READEX 3
 
 using namespace std;
 
