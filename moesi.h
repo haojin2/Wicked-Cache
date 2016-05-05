@@ -7,10 +7,10 @@ using namespace std;
 class moesi: public Protocol{
 public:
 	moesi(){
-		cout<<"MOESI constructor"<<endl;
+		cerr<<"MOESI constructor"<<endl;
 	}
     ~moesi(){
-        cout<<"MOESI destructor"<<endl;
+        cerr<<"MOESI destructor"<<endl;
     }
 	tuple<char, bool, bool> next_state(int operation, char curr_state){
 		char output;
@@ -44,7 +44,7 @@ public:
 					case PROC_WRITE:           output = 'm'; break;
 					case BUS_READ:             output = 's'; write_back = false; respond = true; break;
                     case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
-					default: cout<<"invalid operation"<<endl; break;
+					default: cerr<<"invalid operation"<<endl; break;
 				}
 				break;
             }
@@ -65,11 +65,11 @@ public:
 					case PROC_WRITE:           output = 'm'; break;
 					case BUS_READ:             output = 'i'; write_back = false; respond = false; break;
                     case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
-					default: cout<<"invalid operation"<<endl; break;
+					default: cerr<<"invalid operation"<<endl; break;
 				}
 				break;
             }
-            default: cout<<"invalid curr state"<<endl; break;
+            default: cerr<<"invalid curr state"<<endl; break;
         }
         return tuple<char, bool, bool>(output, write_back, respond);
 	}
@@ -97,7 +97,7 @@ public:
 				hit = false;
 				break;
 			}
-			default: cout<<"invalid curr state"<<endl; break;
+			default: cerr<<"invalid curr state"<<endl; break;
 		}
 		return hit;
 	}

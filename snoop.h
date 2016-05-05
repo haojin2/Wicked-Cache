@@ -29,21 +29,23 @@ using namespace std;
 class Snoop {
 public:
 	Snoop(){
-		cout<<"Snoop constructor"<<endl;
+		cerr<<"Snoop constructor"<<endl;
         ptc = new PROTOCOL_TYPE();
         for (int i = 0; i < NUM_PROCESSORS; ++i)
         {
-            processor_ops.push_back(MemOps("access_pattern_"+to_string(i)+".txt"));
+            processor_ops.push_back(new MemOps("access_pattern_"+to_string((long long int)i)+".txt"));
             caches.push_back(new CACHE_TYPE(CACHE_SIZE, CACHE_NUM_WAYS, CACHE_BLOCK_SIZE));
             pending.push_back(false);
         }
 	}
 
     ~Snoop(){
-        cout<<"Snoop destructor"<<endl;
+        cerr<<"Snoop destructor"<<endl;
         delete ptc;
-        for (int i = 0; i < NUM_PROCESSORS; ++i)
+        for (int i = 0; i < NUM_PROCESSORS; ++i) {
             delete caches[i];
+            delete processor_ops[i];
+        }
     }
 
     void Run();
@@ -69,7 +71,7 @@ private:
 
     queue<BusObj> bus;
     queue<int> req_buffer;
-    vector<MemOps> processor_ops;
+    vector<MemOps*> processor_ops;
     vector<Cache_Base*> caches;
     vector<bool> pending;
     Protocol* ptc;

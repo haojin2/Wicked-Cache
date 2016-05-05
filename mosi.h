@@ -8,10 +8,10 @@ using namespace std;
 class mosi: public Protocol{
 public:
 	mosi(){
-		cout<<"MOSI constructor"<<endl;
+		cerr<<"MOSI constructor"<<endl;
 	}
     ~mosi(){
-        cout<<"MOSI destructor"<<endl;
+        cerr<<"MOSI destructor"<<endl;
     }
 	tuple<char, bool, bool> next_state(int operation, char curr_state){
 		char output;
@@ -55,11 +55,11 @@ public:
 					case PROC_WRITE:           output = 'm'; break;
 					case BUS_READ:             output = 'i'; write_back = false; respond = false; break;
                     case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
-					default: cout<<"invalid operation"<<endl; break;
+					default: cerr<<"invalid operation"<<endl; break;
 				}
 				break;
 			}
-            default: cout<<"invalid curr state"<<endl; break;
+            default: cerr<<"invalid curr state"<<endl; break;
         }
         return tuple<char, bool, bool>(output, write_back, respond);
 	}
@@ -83,7 +83,7 @@ public:
 				hit = false;
 				break;
 			}
-			default: cout<<"invalid curr state"<<endl; break;
+			default: cerr<<"invalid curr state"<<endl; break;
 		}
 		return hit;
 	}

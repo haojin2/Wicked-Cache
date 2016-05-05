@@ -1,7 +1,7 @@
 #include "protocol.h"
 
 Protocol::Protocol() {
-	cout<<"protocol"<<endl;
+	cerr<<"protocol"<<endl;
 }
 
 int Protocol::to_proc(int op, bool from_cache = true) {

@@ -7,11 +7,11 @@
 class msi: public Protocol{
 public:
 	msi(){
-		cout<<"MSI constructor\n";
+		cerr<<"MSI constructor\n";
 		write_back_based_protocol = true;
 	}
 	~msi(){
-		cout<<"MSI destructor\n";
+		cerr<<"MSI destructor\n";
 	}
 
 	tuple<char, bool, bool> next_state(int operation, char curr_state){
@@ -46,11 +46,11 @@ public:
 					case PROC_WRITE:           output = 'm'; break;
 					case BUS_READ:             output = 'i'; write_back = false; respond = false; break;
                     case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;
-					default: cout<<"invalid operation"<<endl; break;
+					default: cerr<<"invalid operation"<<endl; break;
 				}
 				break;
 			}
-			default: cout<<"invalid curr state"<<endl; break;
+			default: cerr<<"invalid curr state"<<endl; break;
 		}
 		return tuple<char, bool, bool>(output, write_back, respond);
 	}
@@ -70,7 +70,7 @@ public:
 				hit = false;
 				break;
 			}
-			default: cout<<"invalid curr state"<<endl; break;
+			default: cerr<<"invalid curr state"<<endl; break;
 		}
 		return hit;
 	}
