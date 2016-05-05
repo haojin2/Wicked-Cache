@@ -17,7 +17,7 @@ public:
     ~moesi(){
         cout<<"MOESI destructor"<<endl;
     }
-	char next_state(int operation, char curr_state, vector<char> & curr_states){
+	char next_state(int operation, char curr_state){
 		char output;
         switch(curr_state){
         	case 'm' :{ 
