@@ -21,7 +21,6 @@ public:
 
 // private:
     FILE * file;
-    char * line;
     int wait_cycles;
     int op;
     long address;

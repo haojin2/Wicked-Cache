@@ -22,7 +22,8 @@ public:
 	Protocol();
 	
 	/* Returns (next_state, write_back?, respond?) */
-	virtual tuple<char, bool, bool> next_state(int operation, char curr_state) = 0;
+	virtual tuple<char, bool, bool> next_state(int operation, char curr_state,
+											   bool exclusive = false) = 0;
 	virtual bool hit(int operation, char curr_state) = 0;
 	virtual bool dirty(char state) = 0;
 

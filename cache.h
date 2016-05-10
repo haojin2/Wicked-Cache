@@ -7,7 +7,7 @@
 #include <time.h>
 #include <math.h>
 #include <stdlib.h> 
-#include <unordered_map>
+#include <map>
 #include <utility>
 using namespace std;
 
@@ -17,10 +17,6 @@ size_t log2(size_t input);
 
 class Cache_Base{
 public:
-	Cache_Base(){
-		cerr<<"Base constructor"<<endl;
-	}
-
 	Cache_Base(size_t size, size_t way = 1, size_t block_size = 1){
 		this->size = powerof2(size) * 1024;
 		if (way > this->size){
@@ -34,13 +30,14 @@ public:
 			this->block_size = this->size / this->way;
 		}
 		else{
-			this->block_size = block_size;  // jin 
+			this->block_size = block_size;
 		}
-		entries = vector<long>(this->size, -1);
-		states = vector<char>(this->size, 'i');
+		entries.insert(entries.begin(), this->size, -1);
+		states.insert(states.begin(), this->size, 'i');
 		tag_mask = 0xffffffffffffffff << (log2(this->block_size) + log2(this->size / this->way));
 		index_mask = ((size_t)0xffffffffffffffff) ^ tag_mask;
-		cerr<<size<<" kb with "<<way<<"-way associative"<<" with block size of "<<this->block_size<<endl;
+		cerr << "Constructed a " << size << " KB, " << way
+			 << "-way associative cache with block size of " << this->block_size << endl;
 	}
 
 	virtual pair<bool,char> access(size_t address) = 0;
@@ -133,29 +130,20 @@ protected:
 
 class LRU: public Cache_Base{
 public:
-	LRU(){
-		cerr<<"LRU"<<endl;
-	}
-
 	LRU(size_t size, size_t way = 1, size_t block_size = 1)
 		: Cache_Base(size, way, block_size) {}
 
 	pair<bool,char> access(size_t address){
 		size_t index = _get_index(address);
 		size_t tag = _get_tag(address);
-		vector<size_t> & temp = usage_map[index];
 		if (way != 1){
+			vector<size_t> & temp = usage_map[index];
 			for (size_t i = 0; i < way; ++i){
 				if (entries[index * way + i] == (long)tag){
 					for (size_t j = temp.size() - 1; j >= 0; --j){
 						if (temp[j] == i){
 							temp.erase(temp.begin()+j);
 							temp.push_back(i);
-							cerr<<"hit "<<i<<" , ";
-							for(size_t k = 0; k < temp.size(); k++){
-								cerr<<temp[k]<<" ";
-							}
-							cerr<<endl;
 							break;
 						}
 					}
@@ -164,11 +152,6 @@ public:
 				if (entries[index * way + i] == (long)-1){
 					entries[index * way + i] = (long)tag;
 					temp.push_back(i);
-					cerr<<"warmup miss, ";
-					for(size_t k = 0; k < temp.size(); k++){
-						cerr<<temp[k]<<" ";
-					}
-					cerr<<endl;
 					return pair<bool,char>(false, states[index * way + i]);
 				}
 			}
@@ -176,10 +159,6 @@ public:
 			temp.erase(temp.begin());
 			temp.push_back(victim);
 			entries[index * way + victim] = (long)tag;
-			cerr<<"simply miss "<<endl;
-			for(size_t k = 0; k < temp.size(); k++){
-				cerr<<temp[k]<<" ";
-			}
 			return pair<bool,char>(false, states[index * way + victim]);
 		}
 		else{
@@ -194,15 +173,11 @@ public:
 	}
 
 private:
-	unordered_map<size_t, vector<size_t>> usage_map;
+	map<size_t, vector<size_t>> usage_map;
 };
 
 class Random: public Cache_Base{
 public:
-	Random(){
-		cerr<<"Random"<<endl;
-	}
-
 	Random(size_t size, size_t way = 1, size_t block_size = 1)
 	: Cache_Base(size, way, block_size){
 		return;

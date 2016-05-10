@@ -7,15 +7,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h>
 #include <queue>
 #include <vector>
 #include <tuple>
 #include <utility>
+#include <algorithm>
 
-#include "snoop_config.h"
 #include "cache.h"
 #include "protocol.h"
 #include "memops.h"
+#include "snoop_config.h"
 
 #define READ 1
 #define WRITE 2
@@ -28,45 +30,23 @@ using namespace std;
 
 class Snoop {
 public:
-	Snoop(){
-		cerr<<"Snoop constructor"<<endl;
-        ptc = new PROTOCOL_TYPE();
-        for (int i = 0; i < NUM_PROCESSORS; ++i)
-        {
-            processor_ops.push_back(new MemOps("access_pattern_"+to_string((long long int)i)+".txt"));
-            caches.push_back(new CACHE_TYPE(CACHE_SIZE, CACHE_NUM_WAYS, CACHE_BLOCK_SIZE));
-            pending.push_back(false);
-        }
-	}
-
-    ~Snoop(){
-        cerr<<"Snoop destructor"<<endl;
-        delete ptc;
-        for (int i = 0; i < NUM_PROCESSORS; ++i) {
-            delete caches[i];
-            delete processor_ops[i];
-        }
-    }
-
+	Snoop();
+    ~Snoop();
     void Run();
 
 private:
     class BusObj
     {
     public:
-        BusObj(int op, int wait_cycles, int src, int dest, long address) {
-            this->op = op;
-            this->wait_cycles = wait_cycles;
-            this->src = src;
-            this->dest = dest;
-            this->address = address;
-        };
+        BusObj(int op, int wait_cycles, int src, int dest, long address,
+               bool exclusive_response);
     
         int op;
         int wait_cycles;
         int src;
         int dest;
         long address;
+        bool exclusive_response;
     };
 
     queue<BusObj> bus;
@@ -75,9 +55,11 @@ private:
     vector<Cache_Base*> caches;
     vector<bool> pending;
     Protocol* ptc;
+    vector<int> random_selector;
 
-    void resume(int id, BusObj & response);
-    void access_writeback_updatestate(int id, long address, int src);
+    void resume(int id, BusObj & bus_obj, bool exclusive);
+    void access_writeback_updatestate(int id, long address, int src,
+                                      bool exclusive = false);
 };
 
 #endif // _SNOOP_H_
