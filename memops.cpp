@@ -6,7 +6,7 @@ MemOps::MemOps(string filename) : wait_cycles(0), op(0), address(0) {
     if (file == NULL)
         cerr << "MemOps: Cannot open file " << endl;
     else
-        getNextOp();
+        get_next_op();
 }
 
 MemOps::~MemOps(){
@@ -14,12 +14,14 @@ MemOps::~MemOps(){
     fclose(file);
 }
 
-void MemOps::getNextOp(){
+void MemOps::get_next_op(){
     size_t len = 0;
     char* line = NULL;
     if (-1 != getline(&line, &len, file)) {
-        if (3 > sscanf(line, "%d %d %x", &wait_cycles, &op, &address))
+        if (3 > sscanf(line, "%d %d %x", &wait_cycles, &op, &address)) {
             cerr << "MemOps: Scanning line failed." << endl;
+            op = address = wait_cycles = -1;
+        }
     } else {
         op = address = wait_cycles = -1;
     }

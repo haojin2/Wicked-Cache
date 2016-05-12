@@ -118,7 +118,10 @@ void Snoop::Run() {
 				MemOps * mem_op = processor_ops[i];
 				char state = caches[i]->get_state((size_t)mem_op->address);
 				if (ptc->hit(mem_op->op, state)) {
+					// LOG("cycle, i mem_op->op hit")
+					// cout << "Cycle " << cycle << ": " << i << (mem_op->op==READ?" read":" write") << " hit" << endl;
 					access_writeback_updatestate(i, mem_op->address, i);
+					mem_op->get_next_op();
 				} else {
 					if (bus.empty())
 						bus.push(BusObj(mem_op->op, BUS_REQUEST_DELAY, i, -1, mem_op->address));
@@ -144,7 +147,7 @@ void Snoop::resume(int id, BusObj & bus_obj, bool exclusive) {
 		access_writeback_updatestate(id, bus_obj.address, bus_obj.src, exclusive);
 	}
 	pending[id] = false;
-	processor_ops[id]->getNextOp();
+	processor_ops[id]->get_next_op();
 }
 
 void Snoop::access_writeback_updatestate(int id, long address, int src, bool exclusive) {

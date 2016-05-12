@@ -9,7 +9,7 @@ typedef LRU CACHE_TYPE;
 #define CACHE_BLOCK_SIZE 16
 
 // system specifications
-#define NUM_PROCESSORS 4
+#define NUM_PROCESSORS 1
 
 // bus & memory delays
 #define BUS_REQUEST_DELAY 5

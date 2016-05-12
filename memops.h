@@ -17,7 +17,7 @@ class MemOps {
 public:
 	MemOps(string filename);
     ~MemOps();
-	void getNextOp();
+	void get_next_op();
 
 // private:
     FILE * file;
