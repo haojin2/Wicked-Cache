@@ -4,7 +4,7 @@ LD = g++
 LDFLAGS = -std=c++0x
 EXENAME = wicked test
 
-wicked : main.o cache.o snoop.o memops.o protocol.o
+wicked : clean main.o cache.o snoop.o memops.o protocol.o
 	$(LD) $(LDFLAGS) main.o cache.o snoop.o memops.o protocol.o -o wicked
 
 all : wicked test

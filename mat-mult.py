@@ -18,6 +18,6 @@ for i in range(row * N/2, row * N/2 + N/2):
 	for j in range(col * N/2, col * N/2 + N/2):
 		for k in range(N):
 			print "10 1 %x" %(addrA + data_size * (i * N + k))
-			print "5 1 %x" %(addrB + data_size * (j * N + k))
+			print "5 1 %x" %(addrB + data_size * (k * N + j))
 			print "8 1 %x" %(addrC + data_size * (i * N + j))
 			print "20 2 %x" %(addrC + data_size * (i * N + j))

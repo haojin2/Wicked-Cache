@@ -13,7 +13,7 @@ public:
     ~mesif(){
         cerr<<"MESIF destructor"<<endl;
     }
-	tuple<char, bool, bool> next_state(int operation, char curr_state){
+	tuple<char, bool, bool> next_state(int operation, char curr_state, bool exclusive){
 		char output;
 		bool write_back = false;
 		bool respond = false;
@@ -54,7 +54,7 @@ public:
         	case 'i' :{
 				switch (operation){
 					case PROC_READ_FROM_CACHE: output = 'f'; break;
-					case PROC_READ_FROM_MEM:   output = 'e'; break;
+					case PROC_READ_FROM_MEM:   output = exclusive ? 'e' : 'f'; break;
 					case PROC_WRITE:           output = 'm'; break;
 					case BUS_READ:             output = 'i'; write_back = false; respond = false; break;
                     case BUS_WRITE:            output = 'i'; write_back = false; respond = false; break;

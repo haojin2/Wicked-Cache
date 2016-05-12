@@ -4,9 +4,9 @@ typedef msi PROTOCOL_TYPE;
 
 // cache specifications
 typedef LRU CACHE_TYPE;
-#define CACHE_SIZE 8
+#define CACHE_SIZE 32
 #define CACHE_NUM_WAYS 4
-#define CACHE_BLOCK_SIZE 16
+#define CACHE_BLOCK_SIZE 32
 
 // system specifications
 #define NUM_PROCESSORS 4
