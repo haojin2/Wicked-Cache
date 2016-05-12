@@ -119,7 +119,7 @@ void Snoop::Run() {
 				char state = caches[i]->get_state((size_t)mem_op->address);
 				if (ptc->hit(mem_op->op, state)) {
 					// LOG("cycle, i mem_op->op hit")
-					// cout << "Cycle " << cycle << ": " << i << (mem_op->op==READ?" read":" write") << " hit" << endl;
+					cout << "Cycle " << cycle << ": " << i << (mem_op->op==READ?" read":" write") << " hit" << endl;
 					access_writeback_updatestate(i, mem_op->address, i);
 					mem_op->get_next_op();
 				} else {
