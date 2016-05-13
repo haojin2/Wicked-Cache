@@ -14,7 +14,7 @@ public:
     ~mesi(){
         cerr<<"MESI destructor"<<endl;
     }
-	tuple<char, bool, bool> next_state(int operation, char curr_state){
+	tuple<char, bool, bool> next_state(int operation, char curr_state, bool exclusive){
 		char output;
 		bool write_back = false;
 		bool respond = false;

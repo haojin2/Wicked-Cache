@@ -29,10 +29,10 @@ public:
 
 	int to_proc(int op, bool from_cache);
 	int to_bus(int op);
+
+	/* true if write-back, false if write-through */
 	bool write_back_based_protocol;
 
-private:
-	/* true if write-back, false if write-through */
 };
 
 #endif // _PROTOCOL_H_
