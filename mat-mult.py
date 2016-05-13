@@ -12,7 +12,7 @@ N = 128
 data_size = 8
 addrA = 0x1000000000000000
 addrB = 0x2000000000677a38
-addrC = 0x300000000019f72c
+addrC = 0x300000000019f720
 
 for i in range(row * N/2, row * N/2 + N/2):
 	for j in range(col * N/2, col * N/2 + N/2):
